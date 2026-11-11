@@ -18,22 +18,38 @@ class CliTest(unittest.TestCase):
         self.addCleanup(self.temporary.cleanup)
         self.home = Path(self.temporary.name)
 
+    def environment(self):
+        """A home directory for every platform, so nothing escapes to the real one."""
+        return {
+            "HOME": str(self.home),
+            "USERPROFILE": str(self.home),
+            "APPDATA": str(self.home / "AppData" / "Roaming"),
+            "LOCALAPPDATA": str(self.home / "AppData" / "Local"),
+        }
+
     def run_cli(self, argv):
         stdout, stderr = io.StringIO(), io.StringIO()
-        with mock.patch.dict("os.environ", {"HOME": str(self.home)}), contextlib.redirect_stdout(
+        with mock.patch.dict("os.environ", self.environment()), contextlib.redirect_stdout(
             stdout
         ), contextlib.redirect_stderr(stderr):
             code = main(argv)
         return code, stdout.getvalue(), stderr.getvalue()
 
+    def files(self):
+        return sorted(str(path.relative_to(self.home)) for path in self.home.rglob("*"))
+
     def test_json_report_is_valid_and_read_only(self):
+        before = self.files()
         code, out, _ = self.run_cli(["--app", "cli-test", "--json"])
         self.assertEqual(code, 0)
         report = json.loads(out)
         self.assertEqual(report["name"], "cli-test")
         self.assertIn("session", report)
         self.assertIn("tray_backend", report)
-        self.assertFalse(any(report["directories_exist"].values()))
+        self.assertEqual(before, self.files(), "the report created files")
+        self.assertFalse(
+            any(report["directories_exist"].values()), report["directories_exist"]
+        )
 
     def test_bad_app_name_is_a_usage_error(self):
         code, out, err = self.run_cli(["--app", "../escape"])
@@ -42,10 +58,14 @@ class CliTest(unittest.TestCase):
         self.assertIn("invalid application name", err)
 
     def test_init_creates_directories(self):
-        code, _, _ = self.run_cli(["--app", "cli-test", "--init", "--json"])
+        with mock.patch.dict("os.environ", self.environment()), contextlib.redirect_stdout(
+            io.StringIO()
+        ):
+            code = main(["--app", "cli-test", "--init", "--json"])
+            paths = Paths.for_app("cli-test")
         self.assertEqual(code, 0)
-        state = self.home / ".local" / "state" / "cli-test"
-        self.assertTrue(state.is_dir())
+        self.assertTrue(paths.state.is_dir())
+        self.assertTrue(paths.config.is_dir())
 
     def test_text_report_mentions_the_version(self):
         code, out, _ = self.run_cli(["--app", "cli-test"])
@@ -58,9 +78,9 @@ class LoggingTest(unittest.TestCase):
     def setUp(self):
         self.temporary = tempfile.TemporaryDirectory()
         self.addCleanup(self.temporary.cleanup)
+        self.addCleanup(self._reset_root_logger)
         self.home = Path(self.temporary.name)
         self.paths = Paths.for_app("log-test", env={}, system="Linux", home=self.home)
-        self.addCleanup(self._reset_root_logger)
 
     @staticmethod
     def _reset_root_logger():

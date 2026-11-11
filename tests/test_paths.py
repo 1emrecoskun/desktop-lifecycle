@@ -1,3 +1,4 @@
+import os
 import tempfile
 import unittest
 from pathlib import Path
@@ -97,6 +98,7 @@ class ValidationTest(unittest.TestCase):
 
 
 class EnsureTest(unittest.TestCase):
+    @unittest.skipIf(os.name == "nt", "POSIX permissions do not exist on Windows")
     def test_creates_directories_with_user_only_mode(self):
         with tempfile.TemporaryDirectory() as temporary:
             paths = Paths.for_app("my-app", env={}, system="Linux", home=Path(temporary))

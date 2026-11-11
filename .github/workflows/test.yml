@@ -34,6 +34,13 @@ jobs:
             python-version: "3.11"
           - os: macos-latest
             python-version: "3.12"
+          # ubuntu-latest no longer ships a Python 3.9 build; the oldest
+          # supported version is tested on the previous LTS instead.
+          - os: ubuntu-latest
+            python-version: "3.9"
+        include:
+          - os: ubuntu-22.04
+            python-version: "3.9"
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5

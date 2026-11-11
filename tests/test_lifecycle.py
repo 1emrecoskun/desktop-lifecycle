@@ -1,3 +1,4 @@
+import logging
 import tempfile
 import unittest
 from pathlib import Path
@@ -9,7 +10,16 @@ class AppTest(unittest.TestCase):
     def setUp(self):
         self.temporary = tempfile.TemporaryDirectory()
         self.addCleanup(self.temporary.cleanup)
+        self.addCleanup(self._close_handlers)
         self.home = Path(self.temporary.name)
+
+    @staticmethod
+    def _close_handlers():
+        """Windows cannot delete a temporary directory with an open log file."""
+        root = logging.getLogger()
+        for handler in list(root.handlers):
+            root.removeHandler(handler)
+            handler.close()
 
     def make(self, argv=()):
         return App("my-tool", argv=list(argv), env={}, system="Linux", home=self.home)

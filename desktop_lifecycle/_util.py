@@ -97,15 +97,22 @@ def escape_entry_value(value: str) -> str:
     )
 
 
-def quote_exec_arg(value: str) -> str:
-    """Quote a single argument for a desktop-entry ``Exec=`` field.
+def quote_exec_arg(value: str, *, windows=None) -> str:
+    """Quote a single argument for an ``Exec=`` field or a Windows command.
 
-    Follows the rules every mainstream launcher applies: backslash escapes
-    ``"``, `````, ``$`` and ``\\`` inside a double-quoted argument, and ``%``
-    is doubled because a single ``%`` starts a field code (``%f``, ``%U``).
+    ``windows`` defaults to the host platform, but callers that produce a file
+    for a *different* platform pass it explicitly: a ``.desktop`` file uses
+    POSIX quoting even when it is written from Windows, and the Windows
+    ``Run`` registry value uses Windows quoting even when the test suite runs
+    on Linux.
+
+    POSIX quoting follows the rules every mainstream launcher applies:
+    backslash escapes ``"``, `````, ``$`` and ``\\`` inside a double-quoted
+    argument, and ``%`` is doubled because a single ``%`` starts a field code
+    (``%f``, ``%U``).
     """
     text = str(value).replace("\r", " ").replace("\n", " ")
-    if os.name == "nt":
+    if (os.name == "nt") if windows is None else windows:
         # Windows command lines use their own quoting rules; only quote when
         # the argument actually needs it.
         if text and not any(character in text for character in ' \t"'):
@@ -121,6 +128,6 @@ def quote_exec_arg(value: str) -> str:
     return f'"{escaped}"'
 
 
-def quote_exec(parts) -> str:
+def quote_exec(parts, *, windows=None) -> str:
     """Quote a whole command line for ``Exec=`` / autostart use."""
-    return " ".join(quote_exec_arg(part) for part in parts)
+    return " ".join(quote_exec_arg(part, windows=windows) for part in parts)

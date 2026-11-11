@@ -41,6 +41,7 @@ class SingleInstanceTest(unittest.TestCase):
         self.assertTrue(instance.acquire())
         instance.release()
 
+    @unittest.skipIf(os.name == "nt", "POSIX permissions do not exist on Windows")
     def test_lock_file_is_private_and_contains_pid(self):
         instance = self.make()
         instance.acquire()

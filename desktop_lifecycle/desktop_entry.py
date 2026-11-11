@@ -57,7 +57,7 @@ def build_entry(
     ]
     if comment:
         lines.append(f"Comment={escape_entry_value(comment)}")
-    lines.append(f"Exec={quote_exec(parts)}")
+    lines.append(f"Exec={quote_exec(parts, windows=False)}")
     if icon:
         lines.append(f"Icon={escape_entry_value(str(icon))}")
     lines.append(f"Terminal={'true' if terminal else 'false'}")

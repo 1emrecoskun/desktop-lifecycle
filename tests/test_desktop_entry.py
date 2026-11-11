@@ -1,3 +1,4 @@
+import os
 import tempfile
 import unittest
 from pathlib import Path
@@ -84,7 +85,8 @@ class InstallTest(unittest.TestCase):
             target, self.home / ".local" / "share" / "applications" / "my-tool.desktop"
         )
         self.assertTrue(target.is_file())
-        self.assertEqual(target.stat().st_mode & 0o777, 0o644)
+        if os.name != "nt":
+            self.assertEqual(target.stat().st_mode & 0o777, 0o644)
         self.assertIn("Exec=", target.read_text(encoding="utf-8"))
         self.assertTrue(remove_menu_entry(self.paths, "my-tool"))
         self.assertFalse(target.exists())
@@ -116,7 +118,8 @@ class InstallTest(unittest.TestCase):
             / "my-tool.svg",
         )
         self.assertTrue(target.is_file())
-        self.assertEqual(target.stat().st_mode & 0o777, 0o644)
+        if os.name != "nt":
+            self.assertEqual(target.stat().st_mode & 0o777, 0o644)
 
     def test_install_icon_missing_source(self):
         with self.assertRaises(FileNotFoundError):

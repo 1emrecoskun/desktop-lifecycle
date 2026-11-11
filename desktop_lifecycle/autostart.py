@@ -131,7 +131,7 @@ class Autostart:
         ]
         if self.comment:
             lines.append(f"Comment={escape_entry_value(self.comment)}")
-        lines.append(f"Exec={quote_exec(self.command)}")
+        lines.append(f"Exec={quote_exec(self.command, windows=False)}")
         if self.icon:
             # Desktop entries want an absolute path here; a bare name has to be
             # looked up through the icon theme and often silently fails.
@@ -218,5 +218,5 @@ class Autostart:
             "enabled": self.enabled,
             "target": str(self.target),
             "command": self.command,
-            "exec_line": quote_exec(self.command),
+            "exec_line": quote_exec(self.command, windows=self.system == "Windows"),
         }

@@ -1,3 +1,4 @@
+import os
 import plistlib
 import tempfile
 import unittest
@@ -108,6 +109,7 @@ class MacAutostartTest(unittest.TestCase):
 
 
 class WindowsAutostartTest(unittest.TestCase):
+    @unittest.skipIf(os.name == "nt", "runs on a non-Windows host on purpose")
     def test_registry_is_not_touched_off_windows(self):
         with tempfile.TemporaryDirectory() as temporary:
             autostart = Autostart(
