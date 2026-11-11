@@ -29,7 +29,7 @@ from .session import has_gui, is_linux, is_wayland, is_x11, session_type
 from .single_instance import AlreadyRunning, SingleInstance
 from .tray import TrayUnavailable, available as tray_available, backend as tray_backend, create as create_tray
 
-__version__ = "0.1.3"
+__version__ = "0.1.4"
 
 __all__ = [
     "App",

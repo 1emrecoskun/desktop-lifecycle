@@ -165,4 +165,8 @@ handling, because it is the one with the window.
 
 MIT — see [LICENSE](LICENSE).
 
+Built by [Emre Coşkun](https://github.com/1emrecoskun), who also maintains
+[ble-led-sync](https://github.com/1emrecoskun/ble-led-sync), the application
+this library was extracted from.
+
 Türkçe: [README.tr.md](README.tr.md)

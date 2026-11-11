@@ -164,4 +164,8 @@ açıklamak zorundadır, çünkü pencere ondadır.
 
 MIT — bkz. [LICENSE](LICENSE).
 
+[Emre Coşkun](https://github.com/1emrecoskun) tarafından yazıldı. Kütüphanenin
+çıkarıldığı uygulama:
+[ble-led-sync](https://github.com/1emrecoskun/ble-led-sync).
+
 English: [README.md](README.md)
