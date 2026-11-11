@@ -12,7 +12,17 @@ not.
 | AppIndicator / Ayatana AppIndicator | the library API that wraps the above | yes | `libayatana-appindicator3` |
 | XEmbed (`_NET_SYSTEM_TRAY`) | X11 only | no | legacy; XWayland does not expose it |
 
-A Wayland session has no system tray whatsoever in the X11 sense. Bars such as
+A Wayland session has no system tray whatsoever in the X11 sense. And a host is
+required even for StatusNotifierItem: GNOME needs the *AppIndicator and
+KStatusNotifierItem Support* extension, KDE ships one, and a bare window
+manager usually has none. `tray.backend()` checks the session bus for
+`org.kde.StatusNotifierWatcher` and answers `none` when nothing is listening:
+
+```bash
+gdbus call --session --dest org.freedesktop.DBus \
+  --object-path /org/freedesktop/DBus \
+  --method org.freedesktop.DBus.NameHasOwner org.kde.StatusNotifierWatcher
+``` Bars such as
 KDE Plasma, Waybar, `xfce4-panel` and COSMIC implement StatusNotifierItem;
 GNOME needs the *AppIndicator and KStatusNotifierItem Support* extension.
 Without them, an application cannot show an icon — no library can change that.

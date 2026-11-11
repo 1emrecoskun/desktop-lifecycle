@@ -89,8 +89,8 @@ the log file. Run it twice to see the hand-over.
 | Tray | ✅ AppIndicator | ✅ AppIndicator | ✅ pystray | ✅ pystray |
 
 Tray icons on Wayland only exist through the AppIndicator / StatusNotifierItem
-protocol. If a desktop has neither, the answer is `none` and your app must
-keep working with a visible window — that is exactly the case this library
+protocol. Tray icons additionally need a StatusNotifierItem host: GNOME ships one only with the AppIndicator extension enabled. `tray.backend()` checks for it and answers `none` when it is missing. If the answer is `none`, your app must keep
+working with a visible window — that is exactly the case this library
 forces you to handle.
 
 ## Security notes

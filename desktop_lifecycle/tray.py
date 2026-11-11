@@ -12,9 +12,12 @@ raised (or ``None`` is returned) rather than leaving a window-less process.
 
 from __future__ import annotations
 
+import functools
 import importlib
 import os
 import platform
+import shutil
+import subprocess
 import threading
 
 from .session import is_linux
@@ -55,6 +58,45 @@ def _has_namespace(namespace: str) -> bool:
     return True
 
 
+@functools.lru_cache(maxsize=1)
+def _sni_watcher_present() -> bool:
+    """True when a StatusNotifierItem host is on the session bus.
+
+    Installing the AppIndicator library is not enough: without a host (GNOME
+    only has one when its AppIndicator extension is enabled, for example) the
+    indicator object is created happily and never appears. Reporting ``none``
+    in that case is the honest answer, and it keeps an application from hiding
+    its only window behind an icon that does not exist.
+
+    When the check cannot run at all, the answer is False: a visible window is
+    always recoverable, a hidden one is not.
+    """
+    executable = shutil.which("gdbus")
+    if not executable:
+        return False
+    try:
+        completed = subprocess.run(
+            [
+                executable,
+                "call",
+                "--session",
+                "--dest",
+                "org.freedesktop.DBus",
+                "--object-path",
+                "/org/freedesktop/DBus",
+                "--method",
+                "org.freedesktop.DBus.NameHasOwner",
+                "org.kde.StatusNotifierWatcher",
+            ],
+            capture_output=True,
+            text=True,
+            timeout=3,
+        )
+    except (OSError, subprocess.SubprocessError):
+        return False
+    return "true" in completed.stdout.lower()
+
+
 def _has_pystray() -> bool:
     try:
         importlib.import_module("pystray")
@@ -73,9 +115,9 @@ def backend(env=None, system=None) -> str:
     """
     operating_system = platform.system() if system is None else system
     if is_linux(env=env, system=operating_system):
-        if _has_namespace("AyatanaAppIndicator3"):
+        if _has_namespace("AyatanaAppIndicator3") and _sni_watcher_present():
             return "ayatana"
-        if _has_namespace("AppIndicator3"):
+        if _has_namespace("AppIndicator3") and _sni_watcher_present():
             return "appindicator"
     if _has_pystray():
         if not is_linux(env=env, system=operating_system):
@@ -147,6 +189,12 @@ class _AppIndicatorTray:
         namespace = _GI_NAMESPACE.get(namespace, namespace)
         gi.require_version(namespace, "0.1")
         from gi.repository import GLib, Gtk  # noqa: PLC0415
+
+        # AppIndicator needs an initialized GTK, not just an imported one.
+        # Without this the indicator is constructed silently but never
+        # registers on the session bus, so no icon ever appears.
+        if not Gtk.init_check()[0]:
+            raise RuntimeError("GTK display connection failed")
 
         indicator_module = importlib.import_module(f"gi.repository.{namespace}")
         self._Gtk = Gtk

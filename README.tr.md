@@ -88,8 +88,8 @@ açılışı, tepsiyi, tepsiye gizlenmeyi ve log dosyasını zaten yönetiyor.
 | Tepsi | ✅ AppIndicator | ✅ AppIndicator | ✅ pystray | ✅ pystray |
 
 Wayland'de tepsi simgesi yalnızca AppIndicator / StatusNotifierItem protokolüyle
-var olur. Masaüstünde ikisi de yoksa cevap `none` olur ve uygulamanız görünür
-bir pencereyle çalışmaya devam etmelidir — bu kütüphane tam olarak bu durumu
+var olur. Tepsi simgesi ayrıca bir StatusNotifierItem sunucusu ister: GNOME'da bu yalnızca AppIndicator eklentisi açıkken vardır. `tray.backend()` bunu kontrol eder ve yoksa `none` der. Cevap `none` ise uygulamanız görünür bir pencereyle
+çalışmaya devam etmelidir — bu kütüphane tam olarak bu durumu
 düşünmeye zorlar.
 
 ## Güvenlik notları

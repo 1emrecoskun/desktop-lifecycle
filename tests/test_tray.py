@@ -19,16 +19,29 @@ class BackendTest(unittest.TestCase):
     def test_ayatana_is_preferred(self):
         with mock.patch.object(
             tray, "_has_namespace", side_effect=lambda ns: ns == "AyatanaAppIndicator3"
-        ), mock.patch.object(tray, "_has_pystray", return_value=True):
+        ), mock.patch.object(tray, "_has_pystray", return_value=True), mock.patch.object(
+            tray, "_sni_watcher_present", return_value=True
+        ):
             self.assertEqual(tray.backend(env={"DISPLAY": ":0"}, system="Linux"), "ayatana")
 
     def test_appindicator_fallback(self):
         with mock.patch.object(
             tray, "_has_namespace", side_effect=lambda ns: ns == "AppIndicator3"
-        ), mock.patch.object(tray, "_has_pystray", return_value=True):
+        ), mock.patch.object(tray, "_has_pystray", return_value=True), mock.patch.object(
+            tray, "_sni_watcher_present", return_value=True
+        ):
             self.assertEqual(
                 tray.backend(env={"DISPLAY": ":0"}, system="Linux"), "appindicator"
             )
+
+    def test_no_watcher_means_no_tray(self):
+        """The library can be installed while the desktop has no host for it."""
+        with mock.patch.object(
+            tray, "_has_namespace", return_value=True
+        ), mock.patch.object(tray, "_has_pystray", return_value=False), mock.patch.object(
+            tray, "_sni_watcher_present", return_value=False
+        ):
+            self.assertEqual(tray.backend(env={"DISPLAY": ":0"}, system="Linux"), "none")
 
     def test_pystray_fallback_needs_x11_on_linux(self):
         with mock.patch.object(tray, "_has_namespace", return_value=False), mock.patch.object(
