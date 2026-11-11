@@ -9,7 +9,7 @@ Tek örnek kilidi, XDG dizinleri, otomatik açılış, menü girişi, oturum tes
 tepsi yeteneği ve dönen log. Framework yok, bağımlılık yok, root yok.
 
 ```bash
-pip install desktop-lifecycle
+pip install git+https://github.com/1emrecoskun/desktop-lifecycle
 ```
 
 ```python
@@ -136,6 +136,8 @@ yazdırır. Kullanıcılar issue'ya `ls -la ~` yerine bunu yapıştırabilir.
 ## Gereksinimler
 
 Python 3.9+. Üçüncü parti paket yok.
+
+PyPI sürümü yayınlanana kadar kurulum depodan yapılır.
 
 İsteğe bağlı tepsi yedeği: `pip install desktop-lifecycle[tray]`
 (pystray + Pillow). Debian/Ubuntu/Mint'te yerel yol:

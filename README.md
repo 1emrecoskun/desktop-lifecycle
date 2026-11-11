@@ -9,7 +9,7 @@ detection, tray capability and rotating logs. No framework, no dependencies,
 no root.
 
 ```bash
-pip install desktop-lifecycle
+pip install git+https://github.com/1emrecoskun/desktop-lifecycle
 ```
 
 ```python
@@ -138,6 +138,8 @@ it, including "should I even try".
 ## Requirements
 
 Python 3.9+. No third-party packages.
+
+Install from the repository until the PyPI release is published.
 
 Optional tray fallback: `pip install desktop-lifecycle[tray]` (pystray + Pillow).
 On Debian/Ubuntu/Mint the native way is `gir1.2-ayatanaappindicator3-0.1`.
