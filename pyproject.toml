@@ -1,0 +1,63 @@
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "desktop-lifecycle"
+dynamic = ["version"]
+description = "The boring parts of a small Python desktop app: single-instance lock, XDG paths, autostart, menu entry, session and tray detection, rotating logs."
+readme = "README.md"
+requires-python = ">=3.9"
+license = "MIT"
+license-files = ["LICENSE"]
+authors = [{ name = "desktop-lifecycle contributors" }]
+keywords = [
+    "desktop",
+    "linux",
+    "xdg",
+    "autostart",
+    "single-instance",
+    "system-tray",
+    "appindicator",
+    "wayland",
+    "pystray",
+    "desktop-entry",
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Environment :: X11 Applications",
+    "Intended Audience :: Developers",
+    "Operating System :: POSIX :: Linux",
+    "Operating System :: Microsoft :: Windows",
+    "Operating System :: MacOS",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Desktop Environment",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
+dependencies = []
+
+[project.optional-dependencies]
+tray = ["pystray>=0.19", "Pillow>=10"]
+build = ["build>=1.0", "twine>=5"]
+
+[project.scripts]
+desktop-lifecycle = "desktop_lifecycle.__main__:main"
+
+[project.urls]
+Homepage = "https://github.com/1emrecoskun/desktop-lifecycle"
+Issues = "https://github.com/1emrecoskun/desktop-lifecycle/issues"
+Changelog = "https://github.com/1emrecoskun/desktop-lifecycle/blob/main/CHANGELOG.md"
+
+[tool.setuptools]
+packages = ["desktop_lifecycle"]
+
+[tool.setuptools.dynamic]
+version = { attr = "desktop_lifecycle.__version__" }
+
+[tool.setuptools.package-data]
+desktop_lifecycle = ["py.typed"]
