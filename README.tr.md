@@ -1,5 +1,7 @@
 # desktop-lifecycle
 
+![test](https://github.com/1emrecoskun/desktop-lifecycle/actions/workflows/test.yml/badge.svg)
+
 **Küçük bir Python masaüstü uygulamasının sıkıcı kısımları — arayüz yazmaya
 başlamadan önce.**
 

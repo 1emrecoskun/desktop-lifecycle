@@ -1,5 +1,7 @@
 # desktop-lifecycle
 
+![test](https://github.com/1emrecoskun/desktop-lifecycle/actions/workflows/test.yml/badge.svg)
+
 **The boring parts of a small Python desktop app — before you write any UI.**
 
 Single-instance lock, XDG directories, autostart, menu entry, session
