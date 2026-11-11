@@ -48,6 +48,19 @@ python -m desktop_lifecycle
   applications that cannot be updated in lockstep
 * do not add a `CHANGELOG` entry; the maintainer writes it at release time
 
+## Sign-off (Developer Certificate of Origin)
+
+Every commit must carry a `Signed-off-by` line:
+
+```bash
+git commit -s -m "Fix Exec quoting for paths containing a dollar sign"
+```
+
+That line certifies the [Developer Certificate of Origin 1.1](https://developercertificate.org/):
+you wrote the change, or you have the right to submit it under this project's
+licence. It is what keeps the project MIT without asking every contributor to
+sign a separate contract.
+
 ## Commit messages
 
 Short imperative subject, for example:

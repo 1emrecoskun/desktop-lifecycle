@@ -44,6 +44,22 @@ just moves the failure into a thread where nobody sees the traceback.
 deliberate: an application must not end up as a window-less process the user
 cannot reach.
 
+The menu is built from `(label, callback)` pairs, and a `None` entry inserts a
+separator:
+
+```python
+create_tray(
+    "My Tool",
+    items=[
+        ("Audio mode", app.audio_mode),
+        ("Screen mode", app.screen_mode),
+        None,
+        ("Settings", app.show),
+        ("Quit", app.close),
+    ],
+)
+```
+
 ## Installing a backend
 
 Debian, Ubuntu, Mint, Pop!\_OS:

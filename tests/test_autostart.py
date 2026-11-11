@@ -78,6 +78,13 @@ class LinuxAutostartTest(unittest.TestCase):
         with self.assertRaises(TypeError):
             Autostart("my-app", "/bin/true", env={}, system="Linux", home=self.home)
 
+    def test_display_name_is_what_the_user_sees(self):
+        autostart = self.make(display_name="My Tool")
+        autostart.enable()
+        text = autostart.target.read_text(encoding="utf-8")
+        self.assertIn("Name=My Tool\n", text)
+        self.assertEqual(autostart.describe()["display_name"], "My Tool")
+
     def test_describe(self):
         info = self.make().describe()
         self.assertEqual(info["app"], "my-app")

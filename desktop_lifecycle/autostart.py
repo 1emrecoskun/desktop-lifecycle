@@ -41,6 +41,7 @@ class Autostart:
         *,
         args=(),
         comment: str = "",
+        display_name: str | None = None,
         icon=None,
         hidden_arg: str | None = "--background",
         paths=None,
@@ -58,6 +59,9 @@ class Autostart:
         if hidden_arg and hidden_arg not in self.args:
             self.args.append(hidden_arg)
         self.comment = comment
+        # The entry's Name= is what a login-items editor shows, so it can
+        # differ from the directory-safe application id.
+        self.display_name = display_name or self.app
         self.icon = icon
         self.system = platform.system() if system is None else system
         self.env = os.environ if env is None else env
@@ -127,7 +131,7 @@ class Autostart:
         lines = [
             "[Desktop Entry]",
             "Type=Application",
-            f"Name={escape_entry_value(self.app)}",
+            f"Name={escape_entry_value(self.display_name)}",
         ]
         if self.comment:
             lines.append(f"Comment={escape_entry_value(self.comment)}")
@@ -214,6 +218,7 @@ class Autostart:
     def describe(self) -> dict:
         return {
             "app": self.app,
+            "display_name": self.display_name,
             "system": self.system,
             "enabled": self.enabled,
             "target": str(self.target),

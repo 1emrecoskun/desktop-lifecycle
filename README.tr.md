@@ -152,7 +152,15 @@ python -m unittest discover -s tests -v
 
 79 test; donanım ve ekran gerekmez.
 
-## Lisans
+## Lisans, isim ve veri
+
+MIT lisansı kodu kapsar; garanti ve sorumluluk vermez. Halka açık küçük bir
+kütüphane için dürüst tutum budur. Marka hakkı vermez; proje adı ve simgesi
+projede kalır.
+
+Kütüphane hiçbir veri toplamaz: telemetri yok, hesap yok, ağ isteği yok,
+analitik yok. Kütüphaneyi *kullanan* uygulama kendi veri işlemesini yine de
+açıklamak zorundadır, çünkü pencere ondadır.
 
 MIT — bkz. [LICENSE](LICENSE).
 

@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.1] - 2026-11-11
+
+### Added
+
+- `Autostart(..., display_name=...)`: the `Name=` a login-items editor shows can
+  now differ from the directory-safe application id.
+- `tray.create(..., items=[...])` accepts `None` as a menu separator, so an
+  application can keep the menu structure it already had.
+
 ## [0.1.0] - 2026-11-11
 
 First release.
@@ -31,5 +40,6 @@ First release.
 - `setup_logging` — rotating log in the state directory.
 - `python -m desktop_lifecycle` — read-only environment report for bug reports.
 
-[Unreleased]: https://github.com/1emrecoskun/desktop-lifecycle/compare/v0.1.0...HEAD
+[Unreleased]: https://github.com/1emrecoskun/desktop-lifecycle/compare/v0.1.1...HEAD
+[0.1.1]: https://github.com/1emrecoskun/desktop-lifecycle/compare/v0.1.0...v0.1.1
 [0.1.0]: https://github.com/1emrecoskun/desktop-lifecycle/releases/tag/v0.1.0

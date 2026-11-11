@@ -95,8 +95,9 @@ def create(
 ):
     """Build a tray object, or raise :class:`TrayUnavailable`.
 
-    ``items`` is a sequence of ``(label, callback)`` pairs; ``show_label`` and
-    ``quit_label`` are translatable so the menu can match the rest of your UI.
+    ``items`` is a sequence of ``(label, callback)`` pairs; a ``None`` entry
+    inserts a separator, and ``show_label`` / ``quit_label`` are translatable
+    so the menu can match the rest of your UI.
     The object exposes ``set_label(text)``, ``pump()`` and ``stop()``.
 
     ``pump()`` exists because an AppIndicator needs a GLib main loop that a
@@ -153,6 +154,9 @@ class _AppIndicatorTray:
         self._label.set_sensitive(False)
         self._menu.append(self._label)
         for label, callback in items:
+            if label is None:
+                self._menu.append(Gtk.SeparatorMenuItem())
+                continue
             entry = Gtk.MenuItem(label=label)
             entry.connect("activate", lambda *_args, cb=callback: cb())
             self._menu.append(entry)
@@ -198,6 +202,9 @@ class _PystrayTray:
         image = _pystray_image(icon)
         menu = []
         for label, callback in items:
+            if label is None:
+                menu.append(pystray.Menu.SEPARATOR)
+                continue
             menu.append(pystray.MenuItem(label, lambda _icon, _item, cb=callback: cb()))
         if on_show:
             menu.append(pystray.MenuItem(show_label, lambda *_: on_show(), default=True))

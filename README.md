@@ -153,7 +153,15 @@ python -m unittest discover -s tests -v
 
 79 tests, no hardware and no display required.
 
-## License
+## Licence, names and data
+
+The MIT licence covers the code. It disclaims warranty and liability, which is
+the honest position for a small library maintained in public. It does not grant
+trademark rights, so the project name and icon stay with the project.
+
+The library collects nothing: no telemetry, no account, no network request, no
+analytics. An application *using* it still has to describe its own data
+handling, because it is the one with the window.
 
 MIT — see [LICENSE](LICENSE).
 
