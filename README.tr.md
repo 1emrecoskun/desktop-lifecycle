@@ -1,6 +1,7 @@
 # desktop-lifecycle
 
-![test](https://github.com/1emrecoskun/desktop-lifecycle/actions/workflows/test.yml/badge.svg)
+[![test](https://github.com/1emrecoskun/desktop-lifecycle/actions/workflows/test.yml/badge.svg)](https://github.com/1emrecoskun/desktop-lifecycle/actions/workflows/test.yml)
+[![PyPI](https://img.shields.io/pypi/v/desktop-lifecycle.svg)](https://pypi.org/project/desktop-lifecycle/)
 
 **Küçük bir Python masaüstü uygulamasının sıkıcı kısımları — arayüz yazmaya
 başlamadan önce.**
@@ -9,7 +10,7 @@ Tek örnek kilidi, XDG dizinleri, otomatik açılış, menü girişi, oturum tes
 tepsi yeteneği ve dönen log. Framework yok, bağımlılık yok, root yok.
 
 ```bash
-pip install git+https://github.com/1emrecoskun/desktop-lifecycle
+pip install desktop-lifecycle
 ```
 
 ```python
@@ -136,8 +137,6 @@ yazdırır. Kullanıcılar issue'ya `ls -la ~` yerine bunu yapıştırabilir.
 ## Gereksinimler
 
 Python 3.9+. Üçüncü parti paket yok.
-
-PyPI sürümü yayınlanana kadar kurulum depodan yapılır.
 
 İsteğe bağlı tepsi yedeği: `pip install desktop-lifecycle[tray]`
 (pystray + Pillow). Debian/Ubuntu/Mint'te yerel yol:

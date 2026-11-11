@@ -1,6 +1,7 @@
 # desktop-lifecycle
 
-![test](https://github.com/1emrecoskun/desktop-lifecycle/actions/workflows/test.yml/badge.svg)
+[![test](https://github.com/1emrecoskun/desktop-lifecycle/actions/workflows/test.yml/badge.svg)](https://github.com/1emrecoskun/desktop-lifecycle/actions/workflows/test.yml)
+[![PyPI](https://img.shields.io/pypi/v/desktop-lifecycle.svg)](https://pypi.org/project/desktop-lifecycle/)
 
 **The boring parts of a small Python desktop app — before you write any UI.**
 
@@ -9,7 +10,7 @@ detection, tray capability and rotating logs. No framework, no dependencies,
 no root.
 
 ```bash
-pip install git+https://github.com/1emrecoskun/desktop-lifecycle
+pip install desktop-lifecycle
 ```
 
 ```python
@@ -138,8 +139,6 @@ it, including "should I even try".
 ## Requirements
 
 Python 3.9+. No third-party packages.
-
-Install from the repository until the PyPI release is published.
 
 Optional tray fallback: `pip install desktop-lifecycle[tray]` (pystray + Pillow).
 On Debian/Ubuntu/Mint the native way is `gir1.2-ayatanaappindicator3-0.1`.
