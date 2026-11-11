@@ -23,6 +23,15 @@ __all__ = ["backend", "available", "create", "TrayUnavailable", "BACKENDS"]
 
 BACKENDS = ("ayatana", "appindicator", "pystray", "none")
 
+# Short names for the public API, real GI namespaces for PyGObject. Passing
+# the short name to gi.require_version raises "Namespace ayatana not
+# available" at runtime, which is exactly the kind of failure a unit test with
+# a mocked backend cannot see.
+_GI_NAMESPACE = {
+    "ayatana": "AyatanaAppIndicator3",
+    "appindicator": "AppIndicator3",
+}
+
 _INSTALL_HINT = (
     "No tray backend is available. Install gir1.2-ayatanaappindicator3-0.1 "
     "(Debian/Ubuntu/Mint) or 'pip install desktop-lifecycle[tray]' for the "
@@ -111,7 +120,7 @@ def create(
             items or (),
             on_show=on_show,
             on_quit=on_quit,
-            namespace=chosen,
+            namespace=_GI_NAMESPACE[chosen],
             show_label=show_label,
             quit_label=quit_label,
         )
@@ -135,6 +144,7 @@ class _AppIndicatorTray:
         import gi  # noqa: PLC0415 - optional dependency
 
         gi.require_version("Gtk", "3.0")
+        namespace = _GI_NAMESPACE.get(namespace, namespace)
         gi.require_version(namespace, "0.1")
         from gi.repository import GLib, Gtk  # noqa: PLC0415
 
@@ -153,10 +163,11 @@ class _AppIndicatorTray:
         self._label = Gtk.MenuItem(label=title)
         self._label.set_sensitive(False)
         self._menu.append(self._label)
-        for label, callback in items:
-            if label is None:
+        for item in items:
+            if item is None:
                 self._menu.append(Gtk.SeparatorMenuItem())
                 continue
+            label, callback = item
             entry = Gtk.MenuItem(label=label)
             entry.connect("activate", lambda *_args, cb=callback: cb())
             self._menu.append(entry)
@@ -201,10 +212,11 @@ class _PystrayTray:
 
         image = _pystray_image(icon)
         menu = []
-        for label, callback in items:
-            if label is None:
+        for item in items:
+            if item is None:
                 menu.append(pystray.Menu.SEPARATOR)
                 continue
+            label, callback = item
             menu.append(pystray.MenuItem(label, lambda _icon, _item, cb=callback: cb()))
         if on_show:
             menu.append(pystray.MenuItem(show_label, lambda *_: on_show(), default=True))

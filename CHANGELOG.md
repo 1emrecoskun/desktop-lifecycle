@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.2] - 2026-11-11
+
+### Fixed
+
+- `tray.create()` passed the short backend name to `gi.require_version`, so
+  every GTK tray raised `Namespace ayatana not available`. The real GI
+  namespace (`AyatanaAppIndicator3` / `AppIndicator3`) is used now.
+- A `None` menu entry crashed both tray backends instead of becoming a
+  separator.
+
+Both were found by moving an application onto the library and watching its
+tray fail in a real session, which is precisely what the unit tests mocked.
+
 ## [0.1.1] - 2026-11-11
 
 ### Added
@@ -40,6 +53,7 @@ First release.
 - `setup_logging` — rotating log in the state directory.
 - `python -m desktop_lifecycle` — read-only environment report for bug reports.
 
-[Unreleased]: https://github.com/1emrecoskun/desktop-lifecycle/compare/v0.1.1...HEAD
+[Unreleased]: https://github.com/1emrecoskun/desktop-lifecycle/compare/v0.1.2...HEAD
+[0.1.2]: https://github.com/1emrecoskun/desktop-lifecycle/compare/v0.1.1...v0.1.2
 [0.1.1]: https://github.com/1emrecoskun/desktop-lifecycle/compare/v0.1.0...v0.1.1
 [0.1.0]: https://github.com/1emrecoskun/desktop-lifecycle/releases/tag/v0.1.0

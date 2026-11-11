@@ -46,6 +46,19 @@ class BackendTest(unittest.TestCase):
 
 
 class CreateTest(unittest.TestCase):
+    def test_gi_namespace_is_not_the_short_name(self):
+        """gi.require_version('ayatana', ...) fails at runtime; the real
+        namespace must be passed to the tray implementation."""
+        for chosen, expected in (
+            ("ayatana", "AyatanaAppIndicator3"),
+            ("appindicator", "AppIndicator3"),
+        ):
+            with self.subTest(chosen=chosen), mock.patch.object(
+                tray, "backend", return_value=chosen
+            ), mock.patch.object(tray, "_AppIndicatorTray") as implementation:
+                tray.create("Title")
+            self.assertEqual(implementation.call_args.kwargs["namespace"], expected)
+
     def test_create_without_backend_raises_with_a_hint(self):
         with mock.patch.object(tray, "backend", return_value="none"):
             with self.assertRaises(tray.TrayUnavailable) as caught:
