@@ -4,6 +4,7 @@ import json
 import logging
 import tempfile
 import unittest
+import uuid
 from pathlib import Path
 from unittest import mock
 
@@ -17,14 +18,26 @@ class CliTest(unittest.TestCase):
         self.temporary = tempfile.TemporaryDirectory()
         self.addCleanup(self.temporary.cleanup)
         self.home = Path(self.temporary.name)
+        # A unique name means a leftover from an earlier run can never make the
+        # read-only assertion pass or fail by accident.
+        self.app_name = f"cli-test-{uuid.uuid4().hex[:8]}"
 
     def environment(self):
-        """A home directory for every platform, so nothing escapes to the real one."""
+        """A home directory for every platform, so nothing escapes to the real one.
+
+        The ``XDG_*`` variables are set explicitly: a CI runner may export one
+        of them, and then an explicitly patched ``HOME`` would be ignored for
+        that directory.
+        """
         return {
             "HOME": str(self.home),
             "USERPROFILE": str(self.home),
             "APPDATA": str(self.home / "AppData" / "Roaming"),
             "LOCALAPPDATA": str(self.home / "AppData" / "Local"),
+            "XDG_CONFIG_HOME": str(self.home / "xdg" / "config"),
+            "XDG_STATE_HOME": str(self.home / "xdg" / "state"),
+            "XDG_DATA_HOME": str(self.home / "xdg" / "data"),
+            "XDG_CACHE_HOME": str(self.home / "xdg" / "cache"),
         }
 
     def run_cli(self, argv):
@@ -40,13 +53,20 @@ class CliTest(unittest.TestCase):
 
     def test_json_report_is_valid_and_read_only(self):
         before = self.files()
-        code, out, _ = self.run_cli(["--app", "cli-test", "--json"])
+        code, out, _ = self.run_cli(["--app", self.app_name, "--json"])
         self.assertEqual(code, 0)
         report = json.loads(out)
-        self.assertEqual(report["name"], "cli-test")
+        self.assertEqual(report["name"], self.app_name)
         self.assertIn("session", report)
         self.assertIn("tray_backend", report)
         self.assertEqual(before, self.files(), "the report created files")
+        for key, value in report["paths"].items():
+            if key == "app":
+                continue
+            self.assertTrue(
+                str(value).startswith(str(self.home)),
+                f"{key} is outside the temporary home: {value}",
+            )
         self.assertFalse(
             any(report["directories_exist"].values()), report["directories_exist"]
         )
@@ -61,14 +81,14 @@ class CliTest(unittest.TestCase):
         with mock.patch.dict("os.environ", self.environment()), contextlib.redirect_stdout(
             io.StringIO()
         ):
-            code = main(["--app", "cli-test", "--init", "--json"])
-            paths = Paths.for_app("cli-test")
+            code = main(["--app", self.app_name, "--init", "--json"])
+            paths = Paths.for_app(self.app_name, env=self.environment(), home=self.home)
         self.assertEqual(code, 0)
         self.assertTrue(paths.state.is_dir())
         self.assertTrue(paths.config.is_dir())
 
     def test_text_report_mentions_the_version(self):
-        code, out, _ = self.run_cli(["--app", "cli-test"])
+        code, out, _ = self.run_cli(["--app", self.app_name])
         self.assertEqual(code, 0)
         self.assertIn("desktop-lifecycle", out)
         self.assertIn("tray backend", out)

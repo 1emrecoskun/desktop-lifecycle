@@ -25,6 +25,7 @@ class LinuxPathsTest(unittest.TestCase):
         self.assertTrue(str(paths.state).startswith(str(self.home)))
         self.assertNotEqual(paths.state.parent.parent, Path("/.local"))
 
+    @unittest.skipIf(os.name == "nt", "POSIX paths are not absolute on Windows")
     def test_absolute_overrides_win(self):
         env = {
             "XDG_CONFIG_HOME": "/opt/config",
