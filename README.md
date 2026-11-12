@@ -121,6 +121,10 @@ It prints the resolved directories, the session type and the tray backend
 without writing anything. Users can paste that into an issue instead of
 `ls -la ~`.
 
+Something not working? See [docs/troubleshooting.md](docs/troubleshooting.md),
+or the shorter Turkish version:
+[docs/sorun-giderme.md](docs/sorun-giderme.md).
+
 ## Compared to the alternatives
 
 | | desktop-lifecycle | pystray | manual code |
@@ -151,7 +155,7 @@ cd desktop-lifecycle
 python -m unittest discover -s tests -v
 ```
 
-79 tests, no hardware and no display required.
+82 tests, no hardware and no display required.
 
 ## Licence, names and data
 
@@ -169,4 +173,4 @@ Built by [Emre Coşkun](https://github.com/1emrecoskun), who also maintains
 [ble-led-sync](https://github.com/1emrecoskun/ble-led-sync), the application
 this library was extracted from.
 
-Türkçe: [README.tr.md](README.tr.md)
+Türkçe: [BENIOKU.md](BENIOKU.md)

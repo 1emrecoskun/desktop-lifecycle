@@ -119,6 +119,9 @@ python -m desktop_lifecycle --json   # hata bildirimi için
 Hiçbir şey yazmadan çözümlenen dizinleri, oturum tipini ve tepsi arka ucunu
 yazdırır. Kullanıcılar issue'ya `ls -la ~` yerine bunu yapıştırabilir.
 
+Bir şey çalışmıyor mu? [docs/sorun-giderme.md](docs/sorun-giderme.md)
+(Türkçe) veya [docs/troubleshooting.md](docs/troubleshooting.md) (İngilizce).
+
 ## Alternatiflerle karşılaştırma
 
 | | desktop-lifecycle | pystray | elle yazılmış kod |
@@ -150,7 +153,7 @@ cd desktop-lifecycle
 python -m unittest discover -s tests -v
 ```
 
-79 test; donanım ve ekran gerekmez.
+82 test; donanım ve ekran gerekmez.
 
 ## Lisans, isim ve veri
 
